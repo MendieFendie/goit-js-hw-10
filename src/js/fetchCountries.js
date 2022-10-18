@@ -7,14 +7,12 @@ import countryInfoHbs from '../templates/countryInfo.hbs';
 const countryList = document.querySelector('.country-list');
 const countryInfo = document.querySelector('.country-info');
 const searchString = document.querySelector('#search-box');
-
 const input = document.querySelector('input');
 
 input.addEventListener('input', debounce(searchValue, 300));
 let name = '';
 function searchValue(e) {
   name = e.target.value.trim();
-  console.log(name);
   responce(name);
 }
 
@@ -31,9 +29,10 @@ function responce(name) {
 
 function renderCountryCardList(countries) {
   if (searchString.value === '') {
+    searchString.value = '';
     countryList.innerHTML = '';
     countryInfo.innerHTML = '';
-    Notiflix.Notify.warning('Memento te hominem esse');
+    Notiflix.Notify.warning('Oops, there is no country with that name');
   } else if (countries.length > 10) {
     countryList.innerHTML = '';
     countryInfo.innerHTML = '';
@@ -44,7 +43,10 @@ function renderCountryCardList(countries) {
     let markup = countryListHbs(countries);
     countryInfo.innerHTML = markup;
     countryList.innerHTML = '';
-  } else {
+  } else if (
+    searchString.value !== 'empty string' &&
+    countries.status !== 404
+  ) {
     let markup = countryInfoHbs(countries);
     countryInfo.innerHTML = '';
     countryList.innerHTML = markup;
